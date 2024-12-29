@@ -1,7 +1,9 @@
 @extends('layout')
 @section('content')
     <div class="w-full max-w-xs">
-        <form class="space-y-4" autocomplete="off">
+        <form action="{{ route('register.store') }}" class="space-y-4" method="POST" autocomplete="off">
+            @csrf
+
             <h1 class="text-xl font-semibold text-center">Register Page</h1>
 
             <div>
@@ -26,7 +28,7 @@
         </form>
 
         <div class="mt-5 text-center">
-            <a href="{{ url('/') }}" class="underline">Login</a>
+            <a href="{{ route('login') }}" class="underline">Login</a>
         </div>
     </div>
 @endsection
