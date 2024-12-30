@@ -83,10 +83,7 @@ class AuthController extends Controller
     public function logout(Request $request)
     {
         if ($request->user()->with_otp) {
-            $exists = Otp::where('user_id', $request->user()->id)->exists();
-            if ($exists) {
-                Otp::where('user_id', $request->user()->id)->delete();
-            }
+            HelpersOTP::clear($request->user()->id);
         }
 
         Auth::guard('web')->logout();

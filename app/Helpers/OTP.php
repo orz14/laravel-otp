@@ -38,4 +38,13 @@ class OTP
             'otp' => $otp
         ]));
     }
+
+    public static function clear($user_id)
+    {
+        $otp = ModelsOtp::where('user_id', $user_id)->exists();
+
+        if ($otp) {
+            ModelsOtp::where('user_id', $user_id)->delete();
+        }
+    }
 }

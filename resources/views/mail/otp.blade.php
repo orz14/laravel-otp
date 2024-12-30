@@ -34,6 +34,10 @@
             <br>
             <span style="font-size: 18px;font-weight: bold;">{{ $params['otp'] }}</span>
         </div>
+        <div style="width: 100%;height: 1px;background-color: #e8e5ef;margin: 20px 0;"></div>
+        <div>
+            <span>Kode OTP ini akan kedaluwarsa dalam {{ env('OTP_EXPIRE_MINUTES') }} menit.</span>
+        </div>
     </div>
     <div style="width: 100%;color: #bcbac8;font-size: 12px;text-align: center;padding: 20px 10px;">
         <span>&copy; {{ date('Y') . ' ' . config('app.name') }}. All rights reserved.</span>

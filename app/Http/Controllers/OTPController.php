@@ -27,25 +27,25 @@ class OTPController extends Controller
         $otp = Otp::where('user_id', $user->id)->first();
 
         if (!is_null($otp)) {
-            if (Carbon::now() > $otp->expires_at) {
-                return back()->with('status', [
-                    'type' => 'error',
-                    'message' => 'OTP code expired, please resend'
-                ]);
-            } else {
-                $otp_data = Crypt::decryptString($otp->secret);
+            $otp_data = Crypt::decryptString($otp->secret);
 
-                if ($request->otp == $otp_data) {
-                    Session::put('session_otp_' . $user->id, true);
-                    $otp->delete();
-
-                    return to_route('home');
-                } else {
+            if ($request->otp == $otp_data) {
+                if (Carbon::now() > $otp->expires_at) {
                     return back()->with('status', [
                         'type' => 'error',
-                        'message' => 'Invalid OTP code'
+                        'message' => 'OTP code expired, please resend'
                     ]);
                 }
+
+                Session::put('session_otp_' . $user->id, true);
+                HelpersOTP::clear($user->id);
+
+                return to_route('home');
+            } else {
+                return back()->with('status', [
+                    'type' => 'error',
+                    'message' => 'Invalid OTP code'
+                ]);
             }
         } else {
             return back()->with('status', [
@@ -59,11 +59,7 @@ class OTPController extends Controller
     {
         $user = $request->user();
 
-        $otp = Otp::where('user_id', $user->id)->first();
-
-        if (!is_null($otp)) {
-            $otp->delete();
-        }
+        HelpersOTP::clear($user->id);
 
         HelpersOTP::generate($user, 'create');
 
